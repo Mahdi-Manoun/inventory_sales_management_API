@@ -17,10 +17,10 @@ router.post('/', requireAuth, validateContactInfo, createSupplier);
 
 router.get('/', requireAuth, getSuppliers);
 
-router.get('/:supplier_id', requireAuth, getSupplier);
+router.get('/:id', requireAuth, getSupplier);
 
-router.patch('/:supplier_id', requireAuth, validateContactInfo, editSupplierInfo);
+router.patch('/:id', requireAuth, validateContactInfo, editSupplierInfo);
 
-router.delete('/:supplier_id', requireAuth, deleteSupplier);
+router.delete('/:id', requireAuth, deleteSupplier);
 
 export default router;

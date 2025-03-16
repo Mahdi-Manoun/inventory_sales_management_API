@@ -17,10 +17,10 @@ router.post('/', requireAuth, validateContactInfo, addCustomer);
 
 router.get('/', requireAuth, getCustomers);
 
-router.get('/:customer_id', requireAuth, getCustomer);
+router.get('/:id', requireAuth, getCustomer);
 
-router.patch('/:customer_id', requireAuth, validateContactInfo, editCustomerInfo);
+router.patch('/:id', requireAuth, validateContactInfo, editCustomerInfo);
 
-router.delete('/:customer_id', requireAuth, deleteCustomer);
+router.delete('/:id', requireAuth, deleteCustomer);
 
 export default router;

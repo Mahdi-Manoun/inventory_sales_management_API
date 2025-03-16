@@ -51,7 +51,7 @@ User.prototype.generateAuthToken = function () {
     return jwt.sign(
         { id: this.id, username: this.username, email: this.email },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: '3h' }
     );
 };
 

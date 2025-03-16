@@ -5,13 +5,6 @@ const createSupplier = async (req, res) => {
     const { username, email } = req.body;
 
     try {
-        username = username?.trim();
-        email = email?.trim();
-
-        const emptyFields = [];
-        if (!username) emptyFields.push('username');
-        if (!email) emptyFields.push('email');
-
         const supplier = await Supplier.create({ username, email });
 
         return res.status(201).json(supplier);
@@ -39,15 +32,15 @@ const getSuppliers = async (req, res) => {
 
 // get a single supplier
 const getSupplier = async (req, res) => {
-    const { supplier_id } = req.params;
+    const { id } = req.params;
 
     try {
-        const supplier = await Supplier.findByPk(supplier_id);
+        const supplier = await Supplier.findByPk(id);
 
         if (!supplier) {
             return res.status(404).json({
                 error: 'Supplier not found',
-                message: `Supplier with ID ${supplier_id} was not found.`
+                message: `Supplier with ID ${id} was not found.`
             });
         }
 
@@ -60,7 +53,7 @@ const getSupplier = async (req, res) => {
 
 // edit supplier's info
 const editSupplierInfo = async (req, res) => {
-    const { supplier_id } = req.params;
+    const { id } = req.params;
     let { username, email, phone_number } = req.body;
 
     try {
@@ -68,16 +61,16 @@ const editSupplierInfo = async (req, res) => {
         email = email?.trim();
         phone_number = phone_number?.trim();
 
-        if (!Number.isInteger(Number(supplier_id)) || supplier_id <= 0) {
+        if (!Number.isInteger(Number(id)) || id <= 0) {
             return res.status(400).json({ error: 'Invalid supplier ID.' });
         }
 
-        const supplier = await Supplier.findByPk(supplier_id);
+        const supplier = await Supplier.findByPk(id);
 
         if (!supplier) {
             return res.status(404).json({
                 error: 'Supplier not found',
-                message: `Supplier with ID ${supplier_id} was not found.`
+                message: `Supplier with ID ${id} was not found.`
             });
         }
 
@@ -88,7 +81,7 @@ const editSupplierInfo = async (req, res) => {
         await supplier.save();
 
         return res.status(200).json({
-            message: `Supplier with ID ${supplier_id} updated successfully!`,
+            message: `Supplier with ID ${id} updated successfully!`,
             supplier
         });
     } catch (error) {
@@ -99,21 +92,21 @@ const editSupplierInfo = async (req, res) => {
 
 // delete a supplier
 const deleteSupplier = async (req, res) => {
-    const { supplier_id } = req.params;
+    const { id } = req.params;
 
     try {
-        const existingSupplier = await Supplier.findByPk(supplier_id);
+        const existingSupplier = await Supplier.findByPk(id);
 
         if (!existingSupplier) {
             return res.status(404).json({
                 error: 'Supplier not found',
-                message: `Supplier with ID ${supplier_id} was not found.`
+                message: `Supplier with ID ${id} was not found.`
             });
         }
 
         await existingSupplier.destroy();
 
-        return res.status(200).json({ message: `Supplier with ID ${supplier_id} has been deleted successfully!` });
+        return res.status(200).json({ message: `Supplier with ID ${id} has been deleted successfully!` });
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
