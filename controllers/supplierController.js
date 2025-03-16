@@ -1,0 +1,129 @@
+import Supplier from '../models/Supplier.js';
+
+// create a supplier
+const createSupplier = async (req, res) => {
+    const { username, email } = req.body;
+
+    try {
+        username = username?.trim();
+        email = email?.trim();
+
+        const emptyFields = [];
+        if (!username) emptyFields.push('username');
+        if (!email) emptyFields.push('email');
+
+        const supplier = await Supplier.create({ username, email });
+
+        return res.status(201).json(supplier);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// get all suppliers
+const getSuppliers = async (req, res) => {
+    try {
+        const supplier = await Supplier.findAll();
+
+        if (supplier.length === 0) {
+            return res.status(404).json({ message: 'No suppliers found.' });
+        }
+
+        return res.status(200).json({ data: supplier });
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// get a single supplier
+const getSupplier = async (req, res) => {
+    const { supplier_id } = req.params;
+
+    try {
+        const supplier = await Supplier.findByPk(supplier_id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                error: 'Supplier not found',
+                message: `Supplier with ID ${supplier_id} was not found.`
+            });
+        }
+
+        return res.status(200).json(supplier);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// edit supplier's info
+const editSupplierInfo = async (req, res) => {
+    const { supplier_id } = req.params;
+    let { username, email, phone_number } = req.body;
+
+    try {
+        username = username?.trim();
+        email = email?.trim();
+        phone_number = phone_number?.trim();
+
+        if (!Number.isInteger(Number(supplier_id)) || supplier_id <= 0) {
+            return res.status(400).json({ error: 'Invalid supplier ID.' });
+        }
+
+        const supplier = await Supplier.findByPk(supplier_id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                error: 'Supplier not found',
+                message: `Supplier with ID ${supplier_id} was not found.`
+            });
+        }
+
+        supplier.username = username || supplier.username;
+        supplier.email = email || supplier.email;
+        supplier.phone = phone_number || supplier.phone;
+
+        await supplier.save();
+
+        return res.status(200).json({
+            message: `Supplier with ID ${supplier_id} updated successfully!`,
+            supplier
+        });
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// delete a supplier
+const deleteSupplier = async (req, res) => {
+    const { supplier_id } = req.params;
+
+    try {
+        const existingSupplier = await Supplier.findByPk(supplier_id);
+
+        if (!existingSupplier) {
+            return res.status(404).json({
+                error: 'Supplier not found',
+                message: `Supplier with ID ${supplier_id} was not found.`
+            });
+        }
+
+        await existingSupplier.destroy();
+
+        return res.status(200).json({ message: `Supplier with ID ${supplier_id} has been deleted successfully!` });
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+export {
+    createSupplier,
+    getSuppliers,
+    getSupplier,
+    editSupplierInfo,
+    deleteSupplier
+};

@@ -7,9 +7,10 @@ const Supplier = sequelize.define('Supplier', {
         autoIncrement: true,
         primaryKey: true
     },
-    name: {
+    username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
             notEmpty: { msg: 'Supplier name is required.' },
             len: {
@@ -18,8 +19,9 @@ const Supplier = sequelize.define('Supplier', {
             }
         }
     },
-    contact_info: {
+    email: {
         type: DataTypes.STRING,
+        unique: true,
         validate: {
             isEmail: {
                 msg: 'Please enter a valid email address for contact_info.'

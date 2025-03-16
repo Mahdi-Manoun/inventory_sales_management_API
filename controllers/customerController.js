@@ -43,7 +43,6 @@ const getCustomers = async (req, res) => {
 
         return res.status(200).json({ data: customers });
     } catch (error) {
-        console.error('Error fetching customers:', error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };
@@ -66,7 +65,6 @@ const getCustomer = async (req, res) => {
         return res.status(200).json(customer);
 
     } catch (error) {
-        console.error('Error fetching customer:', error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };
@@ -102,7 +100,7 @@ const editCustomerInfo = async (req, res) => {
         await customer.save();
 
         return res.status(200).json({
-            message: `Customer with ID ${customer_id} updated successfully.`,
+            message: `Customer with ID ${customer_id} updated successfully!`,
             customer
         });
     } catch (error) {
@@ -129,7 +127,6 @@ const deleteCustomer = async (req, res) => {
 
         return res.status(200).json({ message: `Customer with ID ${customer_id} has been deleted successfully!` });
     } catch (error) {
-        console.error('Error deleting customer:', error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };
