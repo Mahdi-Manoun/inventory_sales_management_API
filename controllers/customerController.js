@@ -1,5 +1,6 @@
 import Customer from '../models/Customer.js';
 
+// add a customer
 const addCustomer = async (req, res) => {
     let { customer_name, email, phone_number } = req.body;
 
@@ -31,6 +32,47 @@ const addCustomer = async (req, res) => {
 };
 
 
+// get all customers
+const getCustomers = async (req, res) => {
+    try {
+        const customers = await Customer.findAll();
+
+        if (customers.length === 0) {
+            return res.status(404).json({ message: 'No customers found.' });
+        }
+
+        return res.status(200).json({ data: customers });
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// get a single customer
+const getCustomer = async (req, res) => {
+    const { customer_id } = req.params;
+
+    try {
+        const customer = await Customer.findByPk(customer_id);
+
+        if (!customer) {
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: `Customer with ID ${customer_id} was not found.`
+            });
+        }
+
+        return res.status(200).json(customer);
+
+    } catch (error) {
+        console.error('Error fetching customer:', error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
+// edit customer's info
 const editCustomerInfo = async (req, res) => {
     const { customer_id } = req.params;
     let { customer_name, email, phone_number } = req.body;
@@ -69,7 +111,34 @@ const editCustomerInfo = async (req, res) => {
 };
 
 
+// delete a customer
+const deleteCustomer = async (req, res) => {
+    const { customer_id } = req.params;
+
+    try {
+        const existingCustomer = await Customer.findByPk(customer_id);
+
+        if (!existingCustomer) {
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: `Customer with ID ${customer_id} was not found.`
+            });
+        }
+
+        await existingCustomer.destroy();
+
+        return res.status(200).json({ message: `Customer with ID ${customer_id} has been deleted successfully!` });
+    } catch (error) {
+        console.error('Error deleting customer:', error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+
 export {
     addCustomer,
-    editCustomerInfo
+    getCustomers,
+    getCustomer,
+    editCustomerInfo,
+    deleteCustomer
 };

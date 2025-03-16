@@ -39,19 +39,17 @@ const validateContactInfo = async (req, res, next) => {
             }
         } else {
             // For POST request, check if email/phone are exists or not.
-            if (email) {
-                const existingEmail = await Customer.findOne({ where: { email } });
-                if (existingEmail) {
-                    return res.status(400).json({ error: `Email ${email} already exists.` });
-                }
+
+            const existingEmail = await Customer.findOne({ where: { email } });
+            if (existingEmail) {
+                return res.status(400).json({ error: `Email ${email} already exists.` });
             }
 
-            if (phone_number) {
-                const existingPhoneNumber = await Customer.findOne({ where: { phone: phone_number } });
-                if (existingPhoneNumber) {
-                    return res.status(400).json({ error: `Phone number ${phone_number} already exists.` });
-                }
+            const existingPhoneNumber = await Customer.findOne({ where: { phone: phone_number } });
+            if (existingPhoneNumber) {
+                return res.status(400).json({ error: `Phone number ${phone_number} already exists.` });
             }
+
         }
 
         next();
