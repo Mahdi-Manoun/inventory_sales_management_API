@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 
 const signup = async (req, res) => {
-    const { username, email, password } = req.body
+    const { username, email, password } = req.body;
 
     try {
         await User.create({ username, email, passwordHash: password });
@@ -9,7 +9,7 @@ const signup = async (req, res) => {
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
 
 
 const login = async (req, res) => {
@@ -36,6 +36,7 @@ const login = async (req, res) => {
         return res.status(401).json({ message: error.message });
     }
 };
+
 
 export {
     signup,

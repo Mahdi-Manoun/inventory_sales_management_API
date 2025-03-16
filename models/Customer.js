@@ -27,12 +27,6 @@ const Customer = sequelize.define('Customer', {
     phone: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            is: {
-                args: [/^\+?[1-9]\d{1,14}$/],
-                msg: 'Please provide a valid phone number.'
-            }
-        }
     }
 }, {
     tableName: 'customers',

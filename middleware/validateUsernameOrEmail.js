@@ -4,7 +4,6 @@ import User from '../models/User.js';
 const validateUsernameOrEmail = async (req, res, next) => {
     let { userInput, username, email } = req.body;
 
-    // Trim inputs
     username = username?.trim();
     email = email?.trim();
 
@@ -27,7 +26,7 @@ const validateUsernameOrEmail = async (req, res, next) => {
         if (!email) emptyFields.push('email');
 
         if (emptyFields.length > 0) {
-            return res.status(400).json({ error: `Fields "${emptyFields.join(', ')}" should not be empty.` });
+            return res.status(400).json({ error: `The following fields are required: "${emptyFields.join(', ')}".` });
         }
     }
 
@@ -42,7 +41,7 @@ const validateUsernameOrEmail = async (req, res, next) => {
     const existingUsername = username ? await User.findOne({ where: { username } }) : null;
     const existingEmail = email ? await User.findOne({ where: { email } }) : null;
 
-    // Handle signup existence checks
+    // checks if username/email exists or not
     if (isSignup) {
         let duplicateFields = [];
         if (existingUsername) duplicateFields.push('username');
