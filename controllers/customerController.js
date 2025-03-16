@@ -59,36 +59,14 @@ const getCustomer = async (req, res) => {
 // edit customer's info
 const editCustomerInfo = async (req, res) => {
     const { id } = req.params;
-    let { customer_name, email, phone_number } = req.body;
+    let { name, email, phone_number } = req.body;
 
     try {
-        customer_name = customer_name?.trim();
-        email = email?.trim();
-        phone_number = phone_number?.trim();
-
-        if (!Number.isInteger(Number(id)) || id <= 0) {
-            return res.status(400).json({ error: 'Invalid workspace ID.' });
-        }
-
-        const customer = await Customer.findByPk(id);
-
-        if (!customer) {
-            return res.status(404).json({
-                error: 'Customer not found',
-                message: `Customer with ID ${id} was not found.`
-            });
-        }
-
-        customer.name = customer_name || customer.name;
-        customer.email = email || customer.email;
-        customer.phone = phone_number || customer.phone;
-
-        await customer.save();
+        await req.customer.save();
 
         return res.status(200).json({
-            message: `Customer with ID ${id} updated successfully!`,
-            customer
-        });
+            message: `Customer with ID ${id} updated successfully!`
+        }, req.customer);
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
