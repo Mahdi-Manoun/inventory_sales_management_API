@@ -28,7 +28,7 @@ const validateContactInfo = async (req, res, next) => {
         if (req.method === 'PATCH') {
             // Validate ID
             if (!Number.isInteger(Number(id)) || id <= 0) {
-                return res.status(400).json({ error: 'Invalid workspace ID.' });
+                return res.status(400).json({ error: 'ID is invalid.' });
             }
 
             // Check if email exists in other records (excluding the current one)
