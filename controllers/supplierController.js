@@ -5,10 +5,13 @@ const createSupplier = async (req, res) => {
     const { username, email } = req.body;
 
     try {
+
+
         const supplier = await Supplier.create({ username, email });
 
         return res.status(201).json(supplier);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };
@@ -54,17 +57,9 @@ const getSupplier = async (req, res) => {
 // edit supplier's info
 const editSupplierInfo = async (req, res) => {
     const { id } = req.params;
-    let { username, email, phone_number } = req.body;
+    let { username, email } = req.body;
 
     try {
-        username = username?.trim();
-        email = email?.trim();
-        phone_number = phone_number?.trim();
-
-        if (!Number.isInteger(Number(id)) || id <= 0) {
-            return res.status(400).json({ error: 'Invalid supplier ID.' });
-        }
-
         const supplier = await Supplier.findByPk(id);
 
         if (!supplier) {
@@ -76,15 +71,12 @@ const editSupplierInfo = async (req, res) => {
 
         supplier.username = username || supplier.username;
         supplier.email = email || supplier.email;
-        supplier.phone = phone_number || supplier.phone;
 
         await supplier.save();
 
-        return res.status(200).json({
-            message: `Supplier with ID ${id} updated successfully!`,
-            supplier
-        });
+        return res.status(200).json({ message: `Supplier with ID ${id} updated successfully!` });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };

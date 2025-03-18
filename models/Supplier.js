@@ -24,7 +24,7 @@ const Supplier = sequelize.define('Supplier', {
         unique: true,
         validate: {
             isEmail: {
-                msg: 'Please enter a valid email address for contact_info.'
+                msg: 'Please enter a valid email address.'
             }
         }
     }

@@ -59,14 +59,28 @@ const getCustomer = async (req, res) => {
 // edit customer's info
 const editCustomerInfo = async (req, res) => {
     const { id } = req.params;
-    let { name, email, phone_number } = req.body;
+    let { customer_name, email, phone_number } = req.body;
 
     try {
-        await req.customer.save();
+        const customer = await Customer.findByPk(id);
+
+        if (!customer) {
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: `Customer with ID ${id} was not found.`
+            });
+        }
+
+        customer.name = customer_name || customer.name;
+        customer.email = email || customer.email;
+        customer.phone = phone_number || customer.phone;
+
+        await customer.save();
 
         return res.status(200).json({
-            message: `Customer with ID ${id} updated successfully!`
-        }, req.customer);
+            message: `Customer with ID ${id} updated successfully!`,
+            customer
+        });
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
