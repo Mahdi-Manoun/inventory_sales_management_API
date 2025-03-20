@@ -4,17 +4,17 @@ import {
     addProduct,
     deleteProduct,
     editProduct,
-    getProduct,
-    getProducts
+    getAllProducts,
+    getProduct
 } from '../controllers/productController.js';
 
 const router = express.Router();
 
 router.post('/', requireAuth, addProduct);
 
-router.get('/', requireAuth, getProducts);
+router.get('/', requireAuth, getAllProducts);
 
-router.get('/:id', requireAuth, getProduct);
+router.get('/filter', requireAuth, getProduct);
 
 router.patch('/:id', requireAuth, editProduct);
 

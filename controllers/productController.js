@@ -33,15 +33,15 @@ const addProduct = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 
 // get all products
-const getProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
     try {
         const products = await Product.findAll();
 
-        if (Product.length === 0) {
+        if (products.length === 0) {
             return res.status(404).json({ message: 'No products found.' });
         }
 
@@ -52,21 +52,33 @@ const getProducts = async (req, res) => {
 };
 
 
-// get a single product
+// get a single product or products by supplier_id or category
 const getProduct = async (req, res) => {
-    const { id } = req.params;
+    const { id, supplierId, category } = req.query;
 
     try {
-        const product = await Product.findByPk(id);
+        let whereClause = {};
 
-        if (!product) {
+        if (id) {
+            whereClause.id = id;
+        }
+        if (supplierId) {
+            whereClause.supplier_id = supplierId;
+        }
+        if (category) {
+            whereClause.category = category;
+        }
+
+        const products = await Product.findAll({ where: whereClause });
+
+        if (products.length === 0) {
             return res.status(404).json({
-                error: 'Product not found',
-                message: `Product with ID ${id} was not found.`
+                error: 'No products found',
+                message: 'No products match the specified criteria.'
             });
         }
 
-        return res.status(200).json(product);
+        return res.status(200).json({ data: products });
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
@@ -103,7 +115,7 @@ const editProduct = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
-}
+};
 
 
 // delete a product
@@ -126,11 +138,12 @@ const deleteProduct = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error.' });
     }
-}
+};
+
 
 export {
     addProduct,
-    getProducts,
+    getAllProducts,
     getProduct,
     editProduct,
     deleteProduct
