@@ -59,15 +59,9 @@ const getProduct = async (req, res) => {
     try {
         let whereClause = {};
 
-        if (id) {
-            whereClause.id = id;
-        }
-        if (supplierId) {
-            whereClause.supplier_id = supplierId;
-        }
-        if (category) {
-            whereClause.category = category;
-        }
+        if (id) whereClause.id = id;
+        if (supplierId) whereClause.supplier_id = supplierId;
+        if (category) whereClause.category = category;
 
         const products = await Product.findAll({ where: whereClause });
 

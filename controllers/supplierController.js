@@ -5,8 +5,6 @@ const createSupplier = async (req, res) => {
     const { username, email } = req.body;
 
     try {
-
-
         const supplier = await Supplier.create({ username, email });
 
         return res.status(201).json(supplier);
